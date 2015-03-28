@@ -107,13 +107,13 @@ router.route('/reservations/:reservation_id')
 
 // on routes that end in /reservations/rides/:ride_id
 router.route('/reservations/rides/:ride_id')
-    
+
     // get the reservation with that id (accessed at GET http://localhost:8080/api/reservations/:reservation_id)
     .get(function(req, res) {
         Reservation.find()
             .where('rideId').equals(req.params.ride_id)
             .exec(function(err, reservation) {
-            
+
             if (err)
                 res.send(err);
             res.json(reservation);
@@ -127,7 +127,6 @@ app.use('/api', router);
 
 app.get('/', function(req, res) {
   	res.render('index');
-	req.io.sockets.emit('hello', { hello: 'world' });
 });
 
 // START THE SERVER
