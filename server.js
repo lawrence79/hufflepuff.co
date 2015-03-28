@@ -4,16 +4,19 @@
 // =============================================================================
 
 // call the packages we need
-var http = require('http')
-	,path		= require('path')
-	,express    = require('express')
-	,socketio	= require('socket.io')
-	,bodyParser = require('body-parser')
-	,mongoose   = require('mongoose')
-	,port 		= process.env.PORT || 8080;
+var http = require('http'),
+    path		= require('path'),
+    express    = require('express'),
+    bodyParser = require('body-parser'),
+    mongoose   = require('mongoose'),
+    port 		= process.env.PORT || 8080;
 
-var app		= express()
-	,sio 	= socketio();
+var app = module.exports.app = express();
+
+
+var server = http.createServer(app);
+var io = require('socket.io').listen(server);  //pass a http.Server instance
+
 
 mongoose.connect('mongodb://harry:harry@ds061208.mongolab.com:61208/hufflepuff');
 
@@ -28,13 +31,6 @@ db.once('open', function (callback) {
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, './public')));
-
-// This attaches the socket.io instance
-
-// to the request object
-app.use(function(req, res, next) {
-  req.io = sio; next();
-});
 
 app.set('view engine', 'jade');
 
@@ -129,13 +125,6 @@ app.get('/', function(req, res) {
   	res.render('index');
 });
 
-// START THE SERVER
-// =============================================================================
-
-var server = http.createServer(app);
-
-server.listen(port);
-sio.listen(server);
-
+server.listen(port);  //listen on port 80
 console.log('Started on ' + port);
 
