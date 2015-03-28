@@ -34,7 +34,6 @@ var port = process.env.PORT || 8080;        // set our port
 var router = express.Router();          // get an instance of the express Router
 
 router.use(function(req, res, next) {
-    console.log('in the middle');
     next();
 });
 
@@ -91,6 +90,21 @@ router.route('/reservations/:reservation_id')
             if (err)
                 res.send(err);
             res.json({ message: 'Reservation successfully deleted' });
+        });
+    });
+
+// on routes that end in /reservations/rides/:ride_id
+router.route('/reservations/rides/:ride_id')
+    
+    // get the reservation with that id (accessed at GET http://localhost:8080/api/reservations/:reservation_id)
+    .get(function(req, res) {
+        Reservation.find()
+            .where('rideId').equals(req.params.ride_id)
+            .exec(function(err, reservation) {
+            
+            if (err)
+                res.send(err);
+            res.json(reservation);
         });
     });
 
