@@ -5,15 +5,15 @@
 
 // call the packages we need
 var http = require('http')
-	,path		= require('path')
-	,express    = require('express')
-	,socketio	= require('socket.io')
-	,bodyParser = require('body-parser')
-	,mongoose   = require('mongoose')
-	,port 		= process.env.PORT || 8080;
+    ,path       = require('path')
+    ,express    = require('express')
+    ,socketio   = require('socket.io')
+    ,bodyParser = require('body-parser')
+    ,mongoose   = require('mongoose')
+    ,port       = process.env.PORT || 8080;
 
-var app		= express()
-	,sio 	= socketio();
+var app     = express()
+    ,sio    = socketio();
 
 mongoose.connect('mongodb://harry:harry@ds061208.mongolab.com:61208/hufflepuff');
 
@@ -60,8 +60,13 @@ router.route('/reservations')
 
         var reservation = new Reservation();
 
-        //@todo: update when we have full schema
-        reservation.rideId = req.body.rideId;
+        reservation.poiId = req.body.poiId;
+        reservation.qty = req.body.qty;
+        reservation.name = req.body.name;
+        reservation.timestamp = req.body.timestamp;
+        reservation.uid = req.body.uid;
+        reservation.deviceType = req.body.deviceType;
+        reservation.deviceId = req.body.deviceId || 0;
 
         reservation.save(function(err) {
             if (err) {
@@ -126,8 +131,8 @@ router.route('/reservations/rides/:ride_id')
 app.use('/api', router);
 
 app.get('/', function(req, res) {
-  	res.render('index');
-	req.io.sockets.emit('hello', { hello: 'world' });
+    res.render('index');
+    req.io.sockets.emit('hello', { hello: 'world' });
 });
 
 // START THE SERVER
