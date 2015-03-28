@@ -6,9 +6,5 @@ module.exports = {
 
   clockwork: {
     apiKey: process.env.CLOCKWORK_KEY || '9ffb267f88df55762f74ba2f517a66dc8bedac5a'
-  },
-
-  lob: {
-    apiKey: process.env.LOB_KEY || 'test_814e892b199d65ef6dbb3e4ad24689559ca'
   }
 };

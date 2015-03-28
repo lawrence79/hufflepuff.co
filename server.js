@@ -122,11 +122,13 @@ router.route('/reservations/rides/:ride_id')
     });
 
 var apiController = require('./app/routes/api');
+
 // REGISTER OUR ROUTES -------------------------------
 // all of our routes will be prefixed with /api
 app.use('/api', router);
-app.get('/sms', apiController.getTwilio);
+
 app.post('/sms', apiController.postTwilio);
+
 app.get('/', function(req, res) {
   	res.render('index');
 });
