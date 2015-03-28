@@ -4,8 +4,9 @@
 // =============================================================================
 
 // call the packages we need
-var express    = require('express');
-var app        = express();
+var app = require('express')();
+var server = require('http').Server(app);
+var io = require('socket.io')(server);
 var bodyParser = require('body-parser');
 var mongoose   = require('mongoose');
 var port = process.env.PORT || 8080;        // set our port
@@ -43,7 +44,7 @@ router.get('/', function(req, res) {
 });
 
 router.route('/reservations')
-    
+
     // create a reservation (accessed at POST http://localhost:8080/api/reservations)
     .post(function(req, res) {
 
@@ -73,7 +74,7 @@ router.route('/reservations')
 
 // on routes that end in /reservations/:reservation_id
 router.route('/reservations/:reservation_id')
-    
+
     // get the reservation with that id (accessed at GET http://localhost:8080/api/reservations/:reservation_id)
     .get(function(req, res) {
         Reservation.findById(req.params.reservation_id, function(err, reservation) {
