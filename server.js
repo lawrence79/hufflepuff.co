@@ -4,11 +4,16 @@
 // =============================================================================
 
 // call the packages we need
-var express    = require('express');
-var app        = express();
-var bodyParser = require('body-parser');
-var mongoose   = require('mongoose');
-var port = process.env.PORT || 8080;        // set our port
+var http = require('http')
+	,path		= require('path')
+	,express    = require('express')
+	,socketio	= require('socket.io')
+	,bodyParser = require('body-parser')
+	,mongoose   = require('mongoose')
+	,port 		= process.env.PORT || 8080;
+
+var app		= express()
+	,sio 	= socketio();
 
 mongoose.connect('mongodb://harry:harry@ds061208.mongolab.com:61208/hufflepuff');
 
@@ -22,12 +27,19 @@ db.once('open', function (callback) {
 // this will let us get the data from a POST
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(express.static(path.join(__dirname, './public')));
+
+// This attaches the socket.io instance
+
+// to the request object
+app.use(function(req, res, next) {
+  req.io = sio; next();
+});
+
 app.set('view engine', 'jade');
 
 // Models
 var Reservation = require('./app/models/reservation');
-
-var port = process.env.PORT || 8080;        // set our port
 
 // ROUTES FOR OUR API
 // =============================================================================
@@ -42,7 +54,7 @@ router.get('/', function(req, res) {
 });
 
 router.route('/reservations')
-    
+
     // create a reservation (accessed at POST http://localhost:8080/api/reservations)
     .post(function(req, res) {
 
@@ -72,7 +84,7 @@ router.route('/reservations')
 
 // on routes that end in /reservations/:reservation_id
 router.route('/reservations/:reservation_id')
-    
+
     // get the reservation with that id (accessed at GET http://localhost:8080/api/reservations/:reservation_id)
     .get(function(req, res) {
         Reservation.findById(req.params.reservation_id, function(err, reservation) {
@@ -113,12 +125,18 @@ router.route('/reservations/rides/:ride_id')
 // all of our routes will be prefixed with /api
 app.use('/api', router);
 
-app.get('/', function(req, res){
-  res.render('index');
+app.get('/', function(req, res) {
+  	res.render('index');
+	req.io.sockets.emit('hello', { hello: 'world' });
 });
 
 // START THE SERVER
 // =============================================================================
-app.listen(port);
+
+var server = http.createServer(app);
+
+server.listen(port);
+sio.listen(server);
+
 console.log('Started on ' + port);
 
