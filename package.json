@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "description": "",
   "main": "server.js",
+  "start": "server.js",
   "dependencies": {
     "mongodb": "^2.0.25",
     "express": "^4.12.3",
