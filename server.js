@@ -56,8 +56,13 @@ router.route('/reservations')
 
         var reservation = new Reservation();
 
-        //@todo: update when we have full schema
-        reservation.rideId = req.body.rideId;
+        reservation.poiId = req.body.poiId;
+        reservation.qty = req.body.qty;
+        reservation.name = req.body.name;
+        reservation.timestamp = req.body.timestamp;
+        reservation.uid = req.body.uid;
+        reservation.deviceType = req.body.deviceType;
+        reservation.deviceId = req.body.deviceId || 0;
 
         reservation.save(function(err) {
             if (err) {
