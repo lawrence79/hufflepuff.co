@@ -4,12 +4,16 @@
 // =============================================================================
 
 // call the packages we need
-var app = require('express')();
-var server = require('http').Server(app);
-var io = require('socket.io')(server);
-var bodyParser = require('body-parser');
-var mongoose   = require('mongoose');
-var port = process.env.PORT || 8080;        // set our port
+var http = require('http')
+	,path		= require('path')
+	,express    = require('express')
+	,socketio	= require('socket.io')
+	,bodyParser = require('body-parser')
+	,mongoose   = require('mongoose')
+	,port 		= process.env.PORT || 8080;
+
+var app		= express()
+	,sio 	= socketio();
 
 mongoose.connect('mongodb://harry:harry@ds061208.mongolab.com:61208/hufflepuff');
 
@@ -23,12 +27,19 @@ db.once('open', function (callback) {
 // this will let us get the data from a POST
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(express.static(path.join(__dirname, './public')));
+
+// This attaches the socket.io instance
+
+// to the request object
+app.use(function(req, res, next) {
+  req.io = sio; next();
+});
+
 app.set('view engine', 'jade');
 
 // Models
 var Reservation = require('./app/models/reservation');
-
-var port = process.env.PORT || 8080;        // set our port
 
 // ROUTES FOR OUR API
 // =============================================================================
@@ -100,12 +111,18 @@ router.route('/reservations/:reservation_id')
 // all of our routes will be prefixed with /api
 app.use('/api', router);
 
-app.get('/', function(req, res){
-  res.render('index');
+app.get('/', function(req, res) {
+  	res.render('index');
+	req.io.sockets.emit('hello', { hello: 'world' });
 });
 
 // START THE SERVER
 // =============================================================================
-app.listen(port);
+
+var server = http.createServer(app);
+
+server.listen(port);
+sio.listen(server);
+
 console.log('Started on ' + port);
 
