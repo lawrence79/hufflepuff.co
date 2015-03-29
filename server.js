@@ -37,6 +37,16 @@ router.get('/play/:filename',function(req, res) {
    omx.play('./files/'+filename+'.mp3', {'-o': 'local'});
 });
 
+router.get('/stop/:filename',function(req, res) {
+   var filename = req.params['filename'];
+   omx.stop('./files/'+filename+'.mp3');
+});
+
+router.get('/pause/:filename',function(req, res) {
+   var filename = req.params['filename'];
+   omx.pause('./files/'+filename+'.mp3');
+});
+
 // REGISTER OUR ROUTES -------------------------------
 // all of our routes will be prefixed with /api
 app.use('/api', router);
