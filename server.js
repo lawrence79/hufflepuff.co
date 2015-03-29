@@ -35,16 +35,19 @@ router.get('/', function(req, res) {
 router.get('/play/:filename',function(req, res) {
    var filename = req.params['filename'];
    omx.play('./files/'+filename+'.mp3', {'-o': 'local'});
+   res.json(200);
 });
 
 router.get('/stop/:filename',function(req, res) {
    var filename = req.params['filename'];
    omx.stop('./files/'+filename+'.mp3');
+   res.json(200);
 });
 
 router.get('/pause/:filename',function(req, res) {
    var filename = req.params['filename'];
    omx.pause('./files/'+filename+'.mp3');
+   res.json(200);
 });
 
 // REGISTER OUR ROUTES -------------------------------
