@@ -54,13 +54,9 @@ router.post('/play',function(req, res) {
     console.log(req.body);
 });
 
-var apiController = require('./app/routes/api');
-
 // REGISTER OUR ROUTES -------------------------------
 // all of our routes will be prefixed with /api
 app.use('/api', router);
-
-app.post('/sms', apiController.postTwilio);
 
 app.get('/', function(req, res) {
   	res.render('index');
