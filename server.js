@@ -34,10 +34,7 @@ router.get('/', function(req, res) {
 
 router.get('/play/:filename',function(req, res) {
    var filename = req.params['filename'];
-   console.log(req.params['filename']);
-   omx.play('./files/'+filename+'.mp3');
-   res.json(200);
-
+   omx.play('./files/'+filename+'.mp3', {'-o': 'local'});
 });
 
 // REGISTER OUR ROUTES -------------------------------
