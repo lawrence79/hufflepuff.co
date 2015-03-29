@@ -8,6 +8,7 @@ var express     = require('express'),
     app         = express(),
     path        = require('path'),
     bodyParser  = require('body-parser'),
+    logger = require('morgan'),
     omx         = require('omx-manager'),
     port 		= process.env.PORT || 8080;
 
@@ -15,7 +16,7 @@ var express     = require('express'),
 // this will let us get the data from a POST
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-
+app.use(logger('dev'))
 app.use(express.static(path.join(__dirname, './public')));
 app.set('view engine', 'jade');
 
