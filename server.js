@@ -16,6 +16,7 @@ var express    = require('express'),
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(omx(function(fn,start){
+    var fn = fn.split('?')[0];
     start('files/' + fn);
 }));
 
